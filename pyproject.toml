@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "vinca_backend"
+name = "vinca_API"
 version = "0.1.0"
 description = "vinca's API"
 authors = ["Oscar Laird <olaird25@gmail.com>"]
@@ -7,12 +7,12 @@ license = "CC0"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-vinca = {path = "/home/oscar/vinca/", develop = true}
 fastapi = "^0.78.0"
 python-jose = "^3.3.0"
 passlib = "^1.7.4"
 uvicorn = "^0.18.2"
 python-multipart = "^0.0.5"
+vinca-core = "^0.1.0"
 
 [tool.poetry.dev-dependencies]
 

@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from fastapi import Depends
 from sqlite3 import Cursor  # for type checking
-from vinca._card import Card
-from vinca._cardlist import Cardlist
+from vinca_core.card import Card
+from vinca_core.cardlist import Cardlist
 import typing
 import base64
 from io import BytesIO
