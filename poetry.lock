@@ -181,6 +181,17 @@ pycrypto = ["pycrypto (>=2.6.0,<2.7.0)", "pyasn1"]
 pycryptodome = ["pycryptodome (>=3.3.1,<4.0.0)", "pyasn1"]
 
 [[package]]
+name = "python-multipart"
+version = "0.0.5"
+description = "A streaming multipart parser for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = ">=1.4.0"
+
+[[package]]
 name = "rich"
 version = "12.4.4"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
@@ -298,7 +309,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "43b90b953dd50da4ebb80ca0c0255857538cc29a58f87ede5ff49f932699db3f"
+content-hash = "205208bc4e7e3cab8331e8c6430d3dca8e5ff76d14b8a45405cb4d0d40b2b8cc"
 
 [metadata.files]
 anyio = [
@@ -403,6 +414,9 @@ pygments = [
 python-jose = [
     {file = "python-jose-3.3.0.tar.gz", hash = "sha256:55779b5e6ad599c6336191246e95eb2293a9ddebd555f796a65f838f07e5d78a"},
     {file = "python_jose-3.3.0-py2.py3-none-any.whl", hash = "sha256:9b1376b023f8b298536eedd47ae1089bcdb848f1535ab30555cd92002d78923a"},
+]
+python-multipart = [
+    {file = "python-multipart-0.0.5.tar.gz", hash = "sha256:f7bb5f611fc600d15fa47b3974c8aa16e93724513b49b5f95c81e6624c83fa43"},
 ]
 rich = [
     {file = "rich-12.4.4-py3-none-any.whl", hash = "sha256:d2bbd99c320a2532ac71ff6a3164867884357da3e3301f0240090c5d2fdac7ec"},

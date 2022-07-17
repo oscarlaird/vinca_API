@@ -1,4 +1,6 @@
 from vinca_backend import api
+from vinca_backend import sync
+from vinca_backend import authentication
 #from vinca_backend import sync_api
 
 from fastapi import FastAPI
@@ -16,6 +18,8 @@ app.add_middleware(
 )
 
 app.include_router(api.router)
+app.include_router(authentication.router, prefix='/auth')
+app.include_router(sync.router, prefix="/sync" )
 
 # if __name__ == "__main__":
     # uvicorn.run(app, host="127.0.0.1", port=8000)

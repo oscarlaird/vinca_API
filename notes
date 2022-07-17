@@ -1,0 +1,56 @@
+layout is controlled by grouping thing in div objects and using css alignment
+on top of this there is floating and fixed positioning
+javascript can be executed via <script> tags
+it has useful builtin funcs like alert and confirm dialogs
+we can also run javascript using onSubmit onClick onChange onMouseOver events
+we can specify an id for an element to make it accessible and e.g. edit its css otf
+
+
+## Times and timezones
+
+SRS schedules cards by date NOT time.
+See Wozniak on this topic: what matters is how many nights of sleep intervene study and review.
+So due_date and intervals are measured in integer number of days.
+I use a custom date format which I call "unix_day". It is the number of days since the epoch.
+There are 86400.0 seconds in a day so you can get it in:
+Python
+>>> time.time()/86400
+MySQL
+>>> now()/86400.0
+Javascript
+>>> Math.floor(Date.now() / 1000)
+The advantage of this format is that (1) it is a simple int or float and (2) simple subtraction
+gives me the number of days between reviews etc.
+normally a due_date is an int (e.g. 19305.0), but if I press the again button I will add 0.003 to the current unix_day
+to generate a new due_date. This 0.003 increment is a 4 minute delay.
+All dates should be in the user's timezone. This is harder, but there are two reasons:
+(1) We cannot have midnight occur in the middle of the day. E.g. if I used GMT then a card which I make at
+5 PM in Colorado, USA would be due on the "next day" at 7 PM because at 6 PM it would have been midnight in England.
+Therefore we want "unix_day" format for the local timezone:
+Python
+>>> (datetime.datetime.now() - datetime.date(year=1970, month=1, day=1)).seconds / 86400
+Javascript
+>>> // We get the unix timestamp and then adjust for the timezoneoffset
+>>>  (Math.floor(Date.now() / 1000) - (new Date().getTimezoneOffset())/60*3600) / 86400.0;
+MySQL
+>>> set time_zone = '+06:00';
+>>> select CONVERT_TZ(now(),@@session.time_zone,'+00:00') / 86400.0;
+So in SQL we need to set the time_zone for the session i.e. connection. Therefore when we initiate a connection
+we should set the time_zone to the client_timezone. If we our client is connecting via the website the only
+way to reliably get the timezone is via javascript. This is:
+Javascript
+>>> // get the offset number of hours from GMT
+>>> (new Date().getTimezoneOffset())/60
+
+
+# Cross-Origin Access Control
+If you have a front-end server and a back-end API server, both
+localhosted on the same machine they won't talk to each other
+until you tell the back-end server to allow cross-origin access.
+In FastAPI this means app.add_middleware(CORSMiddleware,... and
+whitelisting the site which wants the API. Well documented, just
+copy paste.
+
+# 422 Unprocessable Entity
+@router.get can use simple param:Type signature functions and read from the URLSearchParams
+@router.post has to use pydantic BaseModel extended classes which are basically dictionaries.
