@@ -7,7 +7,7 @@ from pathlib import Path
 from io import BytesIO
 messenger_template = Path(__file__).parent / 'messenger.sqlite'
 
-from vinca_backend.authentication import get_user_db_cursor
+from vinca_API.authentication import get_user_db_cursor
 
 router = APIRouter()
 

@@ -7,7 +7,8 @@ from pydantic import BaseModel
 from pathlib import Path
 import sqlite3
 import shutil
-from vinca_backend.authentication.secret_key import SECRET_KEY
+
+from vinca_API.authentication.secret_key import SECRET_KEY
 
 router = APIRouter()
 

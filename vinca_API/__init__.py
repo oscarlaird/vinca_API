@@ -1,7 +1,6 @@
-from vinca_backend import api
-from vinca_backend import sync
-from vinca_backend import authentication
-#from vinca_backend import sync_api
+from vinca_API import api
+from vinca_API import sync
+from vinca_API import authentication
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

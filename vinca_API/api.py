@@ -8,7 +8,7 @@ import typing
 import base64
 from io import BytesIO
 
-from vinca_backend.authentication import get_user_db_cursor
+from vinca_API.authentication import get_user_db_cursor
 
 def interrogate(component):
     from fire import Fire
