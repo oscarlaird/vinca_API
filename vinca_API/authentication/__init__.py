@@ -12,7 +12,9 @@ from vinca_API.authentication.secret_key import SECRET_KEY
 
 router = APIRouter()
 
-template_db = '/home/oscar/modern_cards.db'
+SAMPLE_DB = Path(__file__).parent.parent / 'sample.sqlite'
+EMPTY_DB  = Path(__file__).parent.parent / 'empty.sqlite'
+USER_DECKS = Path('~').expanduser() / 'decks'
 
 
 # to get a string like this run:
@@ -110,11 +112,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return username
 
 async def get_user_db_cursor(user: str = Depends(get_current_user)):
-    path = Path(__file__).parent.parent  # directory of vinca-backend module
-    path /= 'decks'
+    path = USER_DECKS
     path /= (user + '.sqlite')
+    if not path.exists() and user.startswith('guest'):
+        shutil.copy(SAMPLE_DB, path)
     if not path.exists():
-        shutil.copy(template_db, path)
+        shutil.copy(EMPTY_DB, path)
     return sqlite3.connect(path).cursor()
 
 
