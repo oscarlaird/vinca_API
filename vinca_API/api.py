@@ -122,8 +122,8 @@ async def get_occlusion_data(media_id: int, cursor: Cursor = Depends(get_user_db
         raise HTTPException(404, f'Occlusion data @ {media_id} does not exist!')
     return data
 
-@router.get('/next_two_due')
-async def _(filters: Filters, crit: SortCriterion, cursor: Cursor = Depends(get_user_db_cursor)):
+@router.post('/next_two_due')
+async def next_two_due(filters: Filters, crit: SortCriterion, cursor: Cursor = Depends(get_user_db_cursor)):
     ''' Return the next two due cards '''
     filters_copy = dict(filters)
     filters_copy['due'] = True
