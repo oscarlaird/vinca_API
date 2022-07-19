@@ -10,11 +10,24 @@ from io import BytesIO
 
 from vinca_API.authentication import get_user_db_cursor
 
-def interrogate(component):
-    from fire import Fire
-    Fire(component=component, command=['--','--interactive'])
-
 from pydantic import BaseModel
+
+class Filters(BaseModel):
+    deleted: typing.Union[bool, None]
+    due:     typing.Union[bool, None]
+    new:     typing.Union[bool, None]
+    images:  typing.Union[bool, None]
+    audio:   typing.Union[bool, None]
+    search:      typing.Union[str,None]
+    tag:         typing.Union[str, None]
+    card_type:   typing.Union[str,None]
+    created_after:   typing.Union[str, None]
+    created_before:  typing.Union[str, None]
+    due_after:       typing.Union[str, None]
+    due_before:      typing.Union[str, None]
+
+class SortCriterion(BaseModel):
+    sort: str
 
 class API_Card(BaseModel):
     id: int = None
@@ -109,6 +122,27 @@ async def get_occlusion_data(media_id: int, cursor: Cursor = Depends(get_user_db
         raise HTTPException(404, f'Occlusion data @ {media_id} does not exist!')
     return data
 
+@router.get('/next_two_due')
+async def _(filters: Filters, crit: SortCriterion, cursor: Cursor = Depends(get_user_db_cursor)):
+    ''' Return the next two due cards '''
+    filters_copy = dict(filters)
+    filters_copy['due'] = True
+    due = Cardlist(cursor).sort(crit.sort).filter(**filters_copy)
+    return [serialize(c) for c in due.explicit_cards_list(LIMIT=2)]
+
+@router.post('/due_count')
+async def _(filters: Filters,  cursor: Cursor = Depends(get_user_db_cursor)):
+    filters_copy = dict(filters)
+    filters_copy['due'] = True
+    return len(Cardlist(cursor).filter(**filters_copy))
+
+@router.post('/created_count')
+async def _(filters: Filters,  cursor: Cursor = Depends(get_user_db_cursor)):
+    filters_copy = dict(filters)
+    filters_copy['created_after'] = 0
+    return len(Cardlist(cursor).filter(**filters_copy))
+
+
 def serialize(card: Card):
     # serialize a vinca Card to json
     ''' only real fields, not virtual ones like front-image '''
@@ -123,25 +157,6 @@ def serialize(card: Card):
 async def card(id: int, cursor: Cursor = Depends(get_user_db_cursor)):
     c = Card(id, cursor)
     return serialize(c)
-
-#GET /cardlist?deleted=false&search=&due=null&new=null&images=null&audio=null&tag=null&card_type=&created_after=null&created_before=null&due_after=null&due_before=null HTTP/1.1 200 OK
-
-class Filters(BaseModel):
-    deleted: typing.Union[bool, None]
-    due:     typing.Union[bool, None]
-    new:     typing.Union[bool, None]
-    images:  typing.Union[bool, None]
-    audio:   typing.Union[bool, None]
-    search:      typing.Union[str,None]
-    tag:         typing.Union[str, None]
-    card_type:   typing.Union[str,None]
-    created_after:   typing.Union[str, None]
-    created_before:  typing.Union[str, None]
-    due_after:       typing.Union[str, None]
-    due_before:      typing.Union[str, None]
-
-class SortCriterion(BaseModel):
-    sort: str
 
 @router.post('/cardlist')
 async def _(filters: Filters, crit: SortCriterion, cursor: Cursor = Depends(get_user_db_cursor)):
@@ -163,13 +178,6 @@ async def _(cursor: Cursor = Depends(get_user_db_cursor)):
 @router.post('/purge')
 async def _(filters: Filters, cursor: Cursor = Depends(get_user_db_cursor)):
     Cardlist(cursor).filter(**dict(filters))._purge()
-
-    #filter_params = {key: session[key] for key in default_filter_params}
-    #cardlist = cardlist.filter(**filter_params)
-    #cardlist = cardlist.sort(session['sort_by'])
-    #if session['search']:
-        #cardlist = cardlist.findall(session['search'])
-    # TODO we set all the filter criteria of the cardlist based on the session filter criteria
 
 def log(*args):
     print(*args,file=open('/home/oscar/log','a'), flush=True)
