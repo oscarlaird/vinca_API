@@ -10,6 +10,7 @@ from io import BytesIO
 
 from vinca_API.authentication import get_user_db_cursor
 
+
 from pydantic import BaseModel
 
 class Filters(BaseModel):
