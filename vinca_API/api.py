@@ -89,7 +89,6 @@ async def review_card(review: API_Review, metadata: Metadata, cursor: Cursor = D
 
 @router.post('/commit_card')
 async def commit_card(card: API_Card, metadata: Metadata, cursor: Cursor = Depends(get_user_db_cursor)):
-    log(card.id, card.merit)
     assert card.id != 0;
     # get the old card
     old = Card(card.id, cursor)
@@ -179,7 +178,4 @@ async def _(cursor: Cursor = Depends(get_user_db_cursor)):
 @router.post('/purge')
 async def _(filters: Filters, cursor: Cursor = Depends(get_user_db_cursor)):
     Cardlist(cursor).filter(**dict(filters))._purge()
-
-def log(*args):
-    print(*args,file=open('/home/oscar/log','a'), flush=True)
 
