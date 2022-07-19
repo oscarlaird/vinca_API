@@ -11,9 +11,6 @@ from vinca_API.authentication import get_user_db_cursor
 
 router = APIRouter()
 
-def log(*args):
-    print(*args,file=open('/home/oscar/log','a'), flush=True)
-
 @router.get('/test')
 def _():
     return 10

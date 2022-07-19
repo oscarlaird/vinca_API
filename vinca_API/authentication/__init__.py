@@ -41,7 +41,6 @@ passwords = dict([line.split(',',1) for line in passwords_file.read_text().split
 def register(credentials: Credentials):
     u, p = credentials.username, credentials.password
     p = get_password_hash(p)
-    log(p)
     passwords_file.open('a').write(u + ',' + p + '\n')
     passwords[u] = p  # update the db
     access_token = create_access_token(
@@ -120,8 +119,5 @@ async def get_user_db_cursor(user: str = Depends(get_current_user)):
         shutil.copy(EMPTY_DB, path)
     return sqlite3.connect(path).cursor()
 
-
-def log(*args):
-        print(*args,file=open('/home/oscar/log','a'), flush=True)
 
 
